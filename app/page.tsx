@@ -7,9 +7,16 @@ export default function Home() {
   const [hook, setHook] = useState("");
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [cooldown, setCooldown] = useState(false);
 
   async function generateHook() {
-    if (loading) return;
+    if (cooldown) return;
+
+    setCooldown(true);
+
+    setTimeout(() => {
+      setCooldown(false);
+    }, 5000);
 
     setLoading(true);
 
@@ -25,9 +32,7 @@ export default function Home() {
 
     setHook(data.hook);
 
-    setTimeout(() => {
-      setLoading(false);
-    }, 5000);
+    setLoading(false);
   }
 
   const copyHooks = async () => {
@@ -62,14 +67,18 @@ export default function Home() {
 
       <button
         onClick={generateHook}
-        disabled={loading}
+        disabled={loading || cooldown}
         className="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 hover:bg-gray-300 transition cursor-pointer shadow-xl disabled:opacity-50"
       >
-        {loading ? "Generating..." : "Generate Hooks"}
+        {loading
+          ? "Generating..."
+          : cooldown
+          ? "Wait 5s..."
+          : "Generate Hooks"}
       </button>
 
       {hook && (
-        <div className="bg-zinc-900 p-6 rounded-2xl mt-6 max-w-3xl w-full shadow-2xl">
+        <div className="bg-zinc-900 p-6 rounded-2xl mt-4 max-w-3xl">
           <pre className="whitespace-pre-wrap text-xl font-semibold text-left">
             {hook}
           </pre>
