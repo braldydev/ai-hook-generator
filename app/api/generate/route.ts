@@ -43,11 +43,10 @@ Rules:
 - Make them short
 - Make them emotional
 - Use curiosity
-- Sound modern and natural
-- Add emojis sometimes
-- Return ONLY the hooks
-- Number them 1-5
-- Do NOT explain anything
+- Sound natural and modern
+- Use emojis rarely
+- Maximum 1 emoji per hook
+- Some hooks should have no emojis
 `,
         },
       ],
