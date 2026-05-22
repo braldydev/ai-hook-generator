@@ -12,8 +12,28 @@ export async function POST(req: Request) {
       model: "gpt-4.1-mini",
       messages: [
         {
+          role: "system",
+          content:
+            "You are a viral TikTok hook generator. Create highly engaging, curiosity-driven hooks that make people want to stop scrolling immediately.",
+        },
+        {
           role: "user",
-          content: `Create 5 short viral TikTok hooks about ${topic}. Return them as a numbered list.`,
+          content: `Create 5 EXTREMELY viral TikTok hooks about "${topic}".
+
+Rules:
+- Make them short
+- Make them emotional
+- Use curiosity
+- Sound natural and modern
+- Add emojis sometimes
+- Return ONLY the hooks
+- Number them 1-5
+- Do NOT explain anything
+
+Good example:
+1. "Nobody talks about this Fortnite trick... 😳"
+2. "I tried the weirdest Minecraft strategy and THIS happened 🤯"
+`,
         },
       ],
     });
