@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export default function Home() {
   const [topic, setTopic] = useState("");
+  const [style, setStyle] = useState("TikTok");
   const [hook, setHook] = useState("");
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,7 +26,7 @@ export default function Home() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ topic }),
+      body: JSON.stringify({ topic, style }),
     });
 
     const data = await response.json();
@@ -65,6 +66,19 @@ export default function Home() {
         className="w-full max-w-md p-4 rounded-2xl bg-white text-black text-lg mb-4 shadow-2xl"
       />
 
+      <select
+        value={style}
+        onChange={(e) => setStyle(e.target.value)}
+        className="w-full max-w-md p-4 rounded-2xl bg-white text-black text-lg mb-4 shadow-2xl"
+      >
+        <option>TikTok</option>
+        <option>YouTube</option>
+        <option>Gaming</option>
+        <option>Funny</option>
+        <option>Drama</option>
+        <option>Sales</option>
+      </select>
+
       <button
         onClick={generateHook}
         disabled={loading || cooldown}
@@ -78,7 +92,7 @@ export default function Home() {
       </button>
 
       {hook && (
-        <div className="bg-zinc-900 p-6 rounded-2xl mt-4 max-w-3xl">
+        <div className="bg-zinc-900 p-6 rounded-2xl mt-4 max-w-3xl w-full shadow-2xl">
           <pre className="whitespace-pre-wrap text-xl font-semibold text-left">
             {hook}
           </pre>

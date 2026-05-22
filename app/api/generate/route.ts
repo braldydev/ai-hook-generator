@@ -26,33 +26,28 @@ export async function POST(req: Request) {
       apiKey: process.env.OPENAI_API_KEY,
     });
 
-    const { topic } = await req.json();
+    const { topic, style } = await req.json();
 
     const response = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
       messages: [
         {
           role: "system",
-          content:
-            "You are a viral TikTok hook generator. Create highly engaging, curiosity-driven hooks that make people want to stop scrolling immediately.",
+          content: `You are an expert viral content creator specialized in ${style} content.`,
         },
         {
           role: "user",
-          content: `Create 5 EXTREMELY viral TikTok hooks about "${topic}".
+          content: `Create 5 EXTREMELY viral ${style} hooks about "${topic}".
 
 Rules:
 - Make them short
 - Make them emotional
 - Use curiosity
-- Sound natural and modern
+- Sound modern and natural
 - Add emojis sometimes
 - Return ONLY the hooks
 - Number them 1-5
 - Do NOT explain anything
-
-Good example:
-1. "Nobody talks about this Fortnite trick... 😳"
-2. "I tried the weirdest Minecraft strategy and THIS happened 🤯"
 `,
         },
       ],
