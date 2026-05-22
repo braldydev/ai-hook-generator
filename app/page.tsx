@@ -12,7 +12,7 @@ export default function Home() {
   const [topic, setTopic] = useState("");
   const [style, setStyle] = useState("TikTok");
   const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [copied, setCopied] = useState(false);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [cooldown, setCooldown] = useState(false);
 
@@ -61,13 +61,13 @@ export default function Home() {
     setLoading(false);
   }
 
-  const copyHooks = async (text: string) => {
+  const copyHooks = async (text: string, index: number) => {
     await navigator.clipboard.writeText(text);
 
-    setCopied(true);
+    setCopiedIndex(index);
 
     setTimeout(() => {
-      setCopied(false);
+      setCopiedIndex(null);
     }, 2000);
   };
 
@@ -151,10 +151,12 @@ export default function Home() {
             </pre>
 
             <button
-              onClick={() => copyHooks(item.hooks)}
+              onClick={() => copyHooks(item.hooks, index)}
               className="mt-4 bg-white text-black px-4 py-2 rounded-xl font-bold hover:bg-gray-300 transition cursor-pointer"
             >
-              {copied ? "Copied! ✅" : "Copy Hooks 📋"}
+              {copiedIndex === index
+                ? "Copied! ✅"
+                : "Copy Hooks 📋"}
             </button>
           </div>
         ))}
