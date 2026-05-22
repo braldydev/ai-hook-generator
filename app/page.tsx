@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type HistoryItem = {
   topic: string;
@@ -11,11 +11,22 @@ type HistoryItem = {
 export default function Home() {
   const [topic, setTopic] = useState("");
   const [style, setStyle] = useState("TikTok");
-  const [hook, setHook] = useState("");
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [cooldown, setCooldown] = useState(false);
+
+  useEffect(() => {
+    const savedHistory = localStorage.getItem("hook-history");
+
+    if (savedHistory) {
+      setHistory(JSON.parse(savedHistory));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("hook-history", JSON.stringify(history));
+  }, [history]);
 
   async function generateHook() {
     if (cooldown || !topic.trim()) return;
@@ -38,8 +49,6 @@ export default function Home() {
 
     const data = await response.json();
 
-    setHook(data.hook);
-
     setHistory((prev) => [
       {
         topic,
@@ -60,6 +69,11 @@ export default function Home() {
     setTimeout(() => {
       setCopied(false);
     }, 2000);
+  };
+
+  const clearHistory = () => {
+    setHistory([]);
+    localStorage.removeItem("hook-history");
   };
 
   return (
@@ -106,6 +120,15 @@ export default function Home() {
           ? "Wait 5s..."
           : "Generate Hooks"}
       </button>
+
+      {history.length > 0 && (
+        <button
+          onClick={clearHistory}
+          className="mt-4 text-sm text-red-400 hover:text-red-300 transition"
+        >
+          Clear History
+        </button>
+      )}
 
       <div className="w-full max-w-3xl mt-8 space-y-6">
         {history.map((item, index) => (
