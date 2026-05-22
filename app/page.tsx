@@ -81,7 +81,7 @@ export default function Home() {
 
       <button
         onClick={generateHook}
-        disabled={loading || cooldown}
+        disabled={loading || cooldown || !topic.trim()}
         className="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 hover:bg-gray-300 transition cursor-pointer shadow-xl disabled:opacity-50"
       >
         {loading
