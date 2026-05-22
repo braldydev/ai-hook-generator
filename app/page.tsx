@@ -2,16 +2,23 @@
 
 import { useState } from "react";
 
+type HistoryItem = {
+  topic: string;
+  style: string;
+  hooks: string;
+};
+
 export default function Home() {
   const [topic, setTopic] = useState("");
   const [style, setStyle] = useState("TikTok");
   const [hook, setHook] = useState("");
+  const [history, setHistory] = useState<HistoryItem[]>([]);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [cooldown, setCooldown] = useState(false);
 
   async function generateHook() {
-    if (cooldown) return;
+    if (cooldown || !topic.trim()) return;
 
     setCooldown(true);
 
@@ -33,11 +40,20 @@ export default function Home() {
 
     setHook(data.hook);
 
+    setHistory((prev) => [
+      {
+        topic,
+        style,
+        hooks: data.hook,
+      },
+      ...prev,
+    ]);
+
     setLoading(false);
   }
 
-  const copyHooks = async () => {
-    await navigator.clipboard.writeText(hook);
+  const copyHooks = async (text: string) => {
+    await navigator.clipboard.writeText(text);
 
     setCopied(true);
 
@@ -47,8 +63,8 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-black to-zinc-900 text-white flex flex-col items-center justify-center p-6">
-      <h1 className="text-5xl font-bold mb-8 text-center">
+    <main className="min-h-screen bg-gradient-to-b from-black to-zinc-900 text-white flex flex-col items-center p-6">
+      <h1 className="text-5xl font-bold mb-8 text-center mt-10">
         AI Hook Generator 🚀
       </h1>
 
@@ -91,20 +107,35 @@ export default function Home() {
           : "Generate Hooks"}
       </button>
 
-      {hook && (
-        <div className="bg-zinc-900 p-6 rounded-2xl mt-4 max-w-3xl w-full shadow-2xl">
-          <pre className="whitespace-pre-wrap text-xl font-semibold text-left">
-            {hook}
-          </pre>
-
-          <button
-            onClick={copyHooks}
-            className="mt-4 bg-white text-black px-4 py-2 rounded-xl font-bold hover:bg-gray-300 transition cursor-pointer"
+      <div className="w-full max-w-3xl mt-8 space-y-6">
+        {history.map((item, index) => (
+          <div
+            key={index}
+            className="bg-zinc-900 p-6 rounded-2xl shadow-2xl"
           >
-            {copied ? "Copied! ✅" : "Copy Hooks 📋"}
-          </button>
-        </div>
-      )}
+            <div className="mb-4">
+              <p className="text-sm text-zinc-400">
+                Topic: <span className="text-white">{item.topic}</span>
+              </p>
+
+              <p className="text-sm text-zinc-400">
+                Style: <span className="text-white">{item.style}</span>
+              </p>
+            </div>
+
+            <pre className="whitespace-pre-wrap text-xl font-semibold text-left">
+              {item.hooks}
+            </pre>
+
+            <button
+              onClick={() => copyHooks(item.hooks)}
+              className="mt-4 bg-white text-black px-4 py-2 rounded-xl font-bold hover:bg-gray-300 transition cursor-pointer"
+            >
+              {copied ? "Copied! ✅" : "Copy Hooks 📋"}
+            </button>
+          </div>
+        ))}
+      </div>
     </main>
   );
 }
