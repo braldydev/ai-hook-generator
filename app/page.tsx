@@ -49,6 +49,7 @@ export default function Home() {
       <input
         type="text"
         placeholder="Enter video topic..."
+        maxLength={100}
         value={topic}
         onChange={(e) => setTopic(e.target.value)}
         onKeyDown={(e) => {
