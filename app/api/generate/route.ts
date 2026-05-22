@@ -1,6 +1,26 @@
 import OpenAI from "openai";
 
+let lastRequestTime = 0;
+
 export async function POST(req: Request) {
+  const now = Date.now();
+
+  if (now - lastRequestTime < 5000) {
+    return new Response(
+      JSON.stringify({
+        hook: "Please wait 5 seconds before generating again.",
+      }),
+      {
+        status: 429,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
+
+  lastRequestTime = now;
+
   try {
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
