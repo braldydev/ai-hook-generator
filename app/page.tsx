@@ -25,7 +25,9 @@ export default function Home() {
 
     setHook(data.hook);
 
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000);
   }
 
   const copyHooks = async () => {
